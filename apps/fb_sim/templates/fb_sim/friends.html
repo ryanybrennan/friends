@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Friends</title>
+  </head>
+  <body>
+  <h1>Hello, {{users.alias}}!</h1>
+  <p><a href="{% url 'logoff' %}">Logout</a></p>
+<div id='friends_table'>
+  {% if friends %}
+  <h3>Here is the list of your friends:</h3>
+  {% endif %}
+  {% if not friends %}
+  <h3>You don't have friends yet</h3>
+  {%endif%}
+
+<table>
+  <th>Alias</th>
+  <th>Action</th>
+  {% for friendship in friends %}
+    <tr>
+      <td>{{friendship.friend.alias}}</td>
+      <td><a href="{% url 'profile' id=friendship.friend.id %}">View Profile</a> | <a href="{% url 'remove_friend' id=friendship.friend.id %}">Remove as Friend</a></td>
+    </tr>
+  {%endfor%}
+</table>
+</div>
+<div id='not_friends'>
+<h3>Other Users not on your friend's list:</h3>
+<table>
+  <th>Alias</th>
+  <th>Action</th>
+  {% for other in others %}
+    <tr>
+      <td><a href="{% url 'profile' id=other.id %}">{{other.alias}}</a></td>
+      <td>
+        <form class="add" action="{% url 'add_friend' id=other.id %}" method="post">
+          {%csrf_token%}
+          <input type="submit" name="add" value="Add as Friend">
+        </form>
+      </td>
+    </tr>
+  {%endfor%}
+</table>
+</div>
+  </body>
+</html>
